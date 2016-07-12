@@ -5,7 +5,8 @@
 	},
 	"require": {
 		"silex/silex": "~1.2",
-		"monolog/monolog": "~1.7"
+		"monolog/monolog": "~1.7",
+		"php-tmdb/api": "~2.0"
 	},
 	"require-dev": {
 		"heroku/heroku-buildpack-php": "*"
