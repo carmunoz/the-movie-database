@@ -15,7 +15,8 @@ $app->get('/actor/{name}', function($name)  use ($app, $tmdb) {
 	//error_log( 'Actor: ' . $name );
 	//return '<pre>Hello '. $app->escape($name) .'</pre>';
 	$persons = $tmdb->searchPerson( $name );	
-	$app['monolog']->addDebug($name);
+	error_log($name);
+	error_log( print_r( $persons, true ) );
 
 	//$movieList = array( "The Schindler's list" );
 	//return $app->json(array( 'actor' => $name, 'movies' => $movieList ));
