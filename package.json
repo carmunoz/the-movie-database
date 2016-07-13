@@ -1,0 +1,27 @@
+{
+  "name": "tmdb",
+  "version": "1.0.0",
+  "description": "The Movie Database",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "jsx-loader": "~0.13.2",
+    "webpack": "~1.9.7",
+    "css-loader": "~0.12.1",
+    "style-loader": "~0.12.2"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "~2.10.0",
+    "webpack-config": "~4.0.0",
+    "sha1-file": "~1.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tmdb"
+  ],
+  "author": "Carlos Muñoz",
+  "license": "Free"
+}

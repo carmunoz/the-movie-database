@@ -1,0 +1,12 @@
+<%
+	console.log( "generating include.js.php" );
+	var files = htmlWebpackPlugin.files.js;
+	for (var i=0; i < files.length; i++ ) {
+		var filename = files[i];
+		var hash = htmlWebpackPlugin.options.sha1File( "" + filename ) ;
+		console.log( "hash of " + filename + " : " + hash );
+		%><script type="text/javascript" src="<%= filename %>?v=<%= hash %>" charset="UTF-8"></script>
+<%
+	}
+%>
+
