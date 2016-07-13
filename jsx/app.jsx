@@ -4,6 +4,10 @@ var axios = require('axios');
 
 // TODO: declare "results", "noresults" and "actorresult" in CSS
 
+// TODO: show a message when the total result is greater than current list (limited to 20 for performance reasons). 
+// Something like 'there are XXX more results...'
+// this should happen when the user search for "John" or other common name.
+
 Actor = React.createClass({
 	render: function(){
 		// TODO: create component to render movie list for the actor
