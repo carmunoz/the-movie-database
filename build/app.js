@@ -73,18 +73,88 @@
 		}
 	});
 
-	Actor = React.createClass({displayName: "Actor",
-		render: function(){
-			// TODO: create component to render movie list for the actor
-
-			return React.createElement("div", {className: "actorresult"}, 
-				React.createElement("div", null, this.props.actor.name), 
-				React.createElement(Photo, {url: this.props.actor.photo_url})
+	MovieCast = React.createClass({displayName: "MovieCast",
+		render: function() {
+			// TODO: use CSS to style this...
+			return React.createElement("div", {style: { paddingLeft: "15px", border: "1px solid black"}}, 
+				React.createElement("p", {style: { fontWeight: "bold"}},  this.props.cast.original_title), 
+				React.createElement(Photo, {url:  this.props.cast.poster_url}), 
+				React.createElement("p", null, "Release date: ",  this.props.cast.release_date), 
+				React.createElement("p", null, "Character name: ",  this.props.cast.character)
 			);
 		}
 	});
 
+	CrewCast = React.createClass({displayName: "CrewCast",
+		render: function() {
+			// TODO: use CSS to style this...
+			return React.createElement("div", {style: { paddingLeft: "15px", border: "1px solid black"}}, 
+				React.createElement("p", {style: { fontWeight: "bold"}},  this.props.cast.original_title), 
+				React.createElement(Photo, {url:  this.props.cast.poster_url}), 
+				React.createElement("p", null, "Release date: ",  this.props.cast.release_date), 
+				React.createElement("p", null, "Job: ",  this.props.cast.job)
+			);
+		}
+	});
+
+	MovieList = React.createClass({displayName: "MovieList",
+		render: function() {
+			if( this.props.movies ) {
+				if( this.props.movies.cast.length == 0 && this.props.movies.crew.length == 0 ) {
+					return React.createElement("div", null, "The actor has no credit in any movies");
+				}
+				else {
+					var movieCasts = this.props.movies.cast.map( function(movieCast) {
+						return React.createElement(MovieCast, {cast: movieCast});
+					} );
+
+					var crewCasts = this.props.movies.crew.map( function(crewCast){
+						return React.createElement(CrewCast, {cast: crewCast});
+					});
+
+					return React.createElement("div", null, 
+						React.createElement("p", null, "The actor has a role in the movie(s):"), 
+						
+							movieCasts, 
+						
+						
+							crewCasts
+						
+					);
+				}
+			}
+			else {
+				return React.createElement("div", null, "There is not information about actor's movies");
+			}
+		}
+	});
+
+	Actor = React.createClass({displayName: "Actor",
+		getInitialState: function() {
+			return {
+				movieListVisible: false
+			};
+		},
+
+		render: function(){
+			// TODO: use CSS instead of inline style.
+			return React.createElement("div", {className: "actorresult", style: { padding: "15px"}, onClick:  this.handleClick}, 
+				React.createElement("div", null, this.props.actor.name), 
+				React.createElement(Photo, {url: this.props.actor.photo_url}), 
+				 this.state.movieListVisible ? React.createElement(MovieList, {movies:  this.props.actor.movies}) : ''
+			);
+		},
+
+		handleClick: function() {
+			this.setState({ movieListVisible: true });
+		}
+	});
+
+	// TODO: after the initial render o state update, show a hint to the user indicating that he can
+	// click over an actor to view his movies.
+
 	ActorList = React.createClass({displayName: "ActorList",
+
 		render: function() {
 			if( this.props.actors && this.props.actors.length > 0 ) {
 				return React.createElement("div", {className: "results"}, 
@@ -102,6 +172,7 @@
 				}
 			}
 		}
+
 	});
 
 	App = React.createClass({displayName: "App",
@@ -136,6 +207,7 @@
 			console.log( "searching..." + actorName );
 			var url = "api.php/actor/" + encodeURIComponent(actorName);
 			var component = this;
+
 			axios.get( url )
 			.then(function(response){
 				console.log("response");
