@@ -27,18 +27,88 @@ Photo = React.createClass({
 	}
 });
 
-Actor = React.createClass({
-	render: function(){
-		// TODO: create component to render movie list for the actor
-
-		return <div className="actorresult">
-			<div>{this.props.actor.name}</div>
-			<Photo url={this.props.actor.photo_url}/> 
+MovieCast = React.createClass({
+	render: function() {
+		// TODO: use CSS to style this...
+		return <div style={{ paddingLeft: "15px", border: "1px solid black" }}>
+			<p style={{ fontWeight: "bold" }} >{ this.props.cast.original_title }</p>
+			<Photo url={ this.props.cast.poster_url }/>
+			<p>Release date: { this.props.cast.release_date }</p>
+			<p>Character name: { this.props.cast.character }</p>
 		</div>;
 	}
 });
 
+CrewCast = React.createClass({
+	render: function() {
+		// TODO: use CSS to style this...
+		return <div style={{ paddingLeft: "15px", border: "1px solid black" }}>
+			<p style={{ fontWeight: "bold" }} >{ this.props.cast.original_title }</p>
+			<Photo url={ this.props.cast.poster_url }/>
+			<p>Release date: { this.props.cast.release_date }</p>
+			<p>Job: { this.props.cast.job }</p>
+		</div>;
+	}
+});
+
+MovieList = React.createClass({
+	render: function() {
+		if( this.props.movies ) {
+			if( this.props.movies.cast.length == 0 && this.props.movies.crew.length == 0 ) {
+				return <div>The actor has no credit in any movies</div>;
+			}
+			else {
+				var movieCasts = this.props.movies.cast.map( function(movieCast) {
+					return <MovieCast cast={movieCast}/>;
+				} );
+
+				var crewCasts = this.props.movies.crew.map( function(crewCast){
+					return <CrewCast cast={crewCast}/>;
+				});
+
+				return <div>
+					<p>The actor has a role in the movie(s):</p>
+					{
+						movieCasts
+					}
+					{
+						crewCasts
+					}
+				</div>;
+			}
+		}
+		else {
+			return <div>There is not information about actor's movies</div>;
+		}
+	}
+});
+
+Actor = React.createClass({
+	getInitialState: function() {
+		return {
+			movieListVisible: false
+		};
+	},
+
+	render: function(){
+		// TODO: use CSS instead of inline style.
+		return <div className="actorresult" style={{ padding: "15px" }} onClick={ this.handleClick }>
+			<div>{this.props.actor.name}</div>
+			<Photo url={this.props.actor.photo_url}/> 
+			{ this.state.movieListVisible ? <MovieList movies={ this.props.actor.movies} /> : '' }
+		</div>;
+	},
+
+	handleClick: function() {
+		this.setState({ movieListVisible: true });
+	}
+});
+
+// TODO: after the initial render o state update, show a hint to the user indicating that he can
+// click over an actor to view his movies.
+
 ActorList = React.createClass({
+
 	render: function() {
 		if( this.props.actors && this.props.actors.length > 0 ) {
 			return <div className="results">{
@@ -56,6 +126,7 @@ ActorList = React.createClass({
 			}
 		}
 	}
+
 });
 
 App = React.createClass({
@@ -90,6 +161,7 @@ App = React.createClass({
 		console.log( "searching..." + actorName );
 		var url = "api.php/actor/" + encodeURIComponent(actorName);
 		var component = this;
+
 		axios.get( url )
 		.then(function(response){
 			console.log("response");
