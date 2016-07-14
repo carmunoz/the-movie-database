@@ -50,14 +50,36 @@
 
 	// TODO: declare "results", "noresults" and "actorresult" in CSS
 
+	// TODO: show a message when the total result is greater than current list (limited to 20 for performance reasons). 
+	// Something like 'there are XXX more results...'
+	// this should happen when the user search for "John" or other common name.
+	// The proper way is to use or create a pagination component.
+
+	// TODO: show a clock indicator when there is an Ajax call in progress.
+
+	// TODO: add click handler for actors to show the actor's movie list
+
+	Photo = React.createClass({displayName: "Photo",
+		render: function() {
+			// TODO: use CSS instead of fixed layout
+			if( ! this.props.url  ) {
+				return React.createElement("div", null, "No photo available");
+			}
+			else {
+				return React.createElement("div", null, 
+					React.createElement("image", {src: this.props.url, width: "120px"})
+				);
+			}
+		}
+	});
+
 	Actor = React.createClass({displayName: "Actor",
 		render: function(){
 			// TODO: create component to render movie list for the actor
-			// TODO: create component to render the image profile properly
 
 			return React.createElement("div", {className: "actorresult"}, 
 				React.createElement("div", null, this.props.actor.name), 
-				React.createElement("div", null, this.props.actor.profile_path)
+				React.createElement(Photo, {url: this.props.actor.photo_url})
 			);
 		}
 	});
