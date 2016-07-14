@@ -13,6 +13,8 @@ var axios = require('axios');
 
 // TODO: add click handler for actors to show the actor's movie list
 
+// TODO: apply "trim" on inputs.
+
 Photo = React.createClass({
 	render: function() {
 		// TODO: use CSS instead of fixed layout
@@ -30,44 +32,107 @@ Photo = React.createClass({
 MovieCast = React.createClass({
 	render: function() {
 		// TODO: use CSS to style this...
-		return <div style={{ paddingLeft: "15px", border: "1px solid black" }}>
-			<p style={{ fontWeight: "bold" }} >{ this.props.cast.original_title }</p>
-			<Photo url={ this.props.cast.poster_url }/>
-			<p>Release date: { this.props.cast.release_date }</p>
-			<p>Character name: { this.props.cast.character }</p>
-		</div>;
+		if( this.isValidForFilter() ) {
+			return <div style={{ paddingLeft: "15px", border: "1px solid black" }}>
+				<p style={{ fontWeight: "bold" }} >{ this.props.cast.original_title }</p>
+				<Photo url={ this.props.cast.poster_url }/>
+				<p>Release date: { this.props.cast.release_date }</p>
+				<p>Character name: { this.props.cast.character }</p>
+			</div>;
+		}
+		else {
+			return <div/>;
+		}
+	},
+
+	isValidForFilter: function() {
+		if( !this.props.filter || this.props.filter == '' ) {
+			return true;
+		}
+
+		if( this.props.cast.original_title && this.props.cast.original_title.toLowerCase().includes( this.props.filter.toLowerCase() ) ) {
+			return true;
+		}
+		if( this.props.cast.release_date && this.props.cast.release_date.includes( this.props.filter ) ) {
+			return true;
+		}
+		if( this.props.cast.character && this.props.cast.character.toLowerCase().includes( this.props.filter.toLowerCase() ) ) {
+			return true;
+		}
+
+		return false;
 	}
+
 });
 
 CrewCast = React.createClass({
 	render: function() {
 		// TODO: use CSS to style this...
-		return <div style={{ paddingLeft: "15px", border: "1px solid black" }}>
-			<p style={{ fontWeight: "bold" }} >{ this.props.cast.original_title }</p>
-			<Photo url={ this.props.cast.poster_url }/>
-			<p>Release date: { this.props.cast.release_date }</p>
-			<p>Job: { this.props.cast.job }</p>
-		</div>;
+		if( this.isValidForFilter() ) {
+			return <div style={{ paddingLeft: "15px", border: "1px solid black" }}>
+				<p style={{ fontWeight: "bold" }} >{ this.props.cast.original_title }</p>
+				<Photo url={ this.props.cast.poster_url }/>
+				<p>Release date: { this.props.cast.release_date }</p>
+				<p>Job: { this.props.cast.job }</p>
+			</div>;
+		}
+		else {
+			return <div/>;
+		}
+	},
+
+	isValidForFilter: function() {
+		if( !this.props.filter || this.props.filter == '' ) {
+			return true;
+		}
+
+		if( this.props.cast.original_title && this.props.cast.original_title.toLowerCase().includes( this.props.filter.toLowerCase() ) ) {
+			return true;
+		}
+		if( this.props.cast.release_date && this.props.cast.release_date.includes( this.props.filter ) ) {
+			return true;
+		}
+		if( this.props.cast.job && this.props.cast.job.toLowerCase().includes( this.props.filter.toLowerCase() ) ) {
+			return true;
+		}
+
+		return false;
 	}
+
 });
 
 MovieList = React.createClass({
+	getInitialState: function() {
+		return {
+			filter: ''
+		}
+	},
+
 	render: function() {
 		if( this.props.movies ) {
 			if( this.props.movies.cast.length == 0 && this.props.movies.crew.length == 0 ) {
 				return <div>The actor has no credit in any movies</div>;
 			}
 			else {
+				var component = this;
 				var movieCasts = this.props.movies.cast.map( function(movieCast) {
-					return <MovieCast cast={movieCast}/>;
+					return <MovieCast key={movieCast.credit_id} cast={movieCast} filter={ component.state.filter }/>;
 				} );
 
 				var crewCasts = this.props.movies.crew.map( function(crewCast){
-					return <CrewCast cast={crewCast}/>;
+					return <CrewCast key={crewCast.credit_id} cast={crewCast} filter={ component.state.filter }/>;
 				});
 
 				return <div>
 					<p>The actor has a role in the movie(s):</p>
+					<p>Filter... 
+						<input 
+							type="text" 
+							ref="filter" 
+							placeholder="Enter keyword here to search in actors movie list" 
+							onChange={ this.handleChangeFilter }
+							size="60" /> 
+					</p>
 					{
 						movieCasts
 					}
@@ -79,6 +144,15 @@ MovieList = React.createClass({
 		}
 		else {
 			return <div>There is not information about actor's movies</div>;
+		}
+	},
+
+	handleChangeFilter: function() {
+		if( this.refs.filter.value && this.refs.filter.value != '' ) {
+			this.setState({ filter: this.refs.filter.value.trim() });
+		}
+		else {
+			this.setState({ filter: '' });
 		}
 	}
 });
@@ -113,7 +187,7 @@ ActorList = React.createClass({
 		if( this.props.actors && this.props.actors.length > 0 ) {
 			return <div className="results">{
 				this.props.actors.map(function(actor) {
-					return <Actor actor={actor}/>;
+					return <Actor key={""+actor.id} actor={actor}/>;
 				})
 			}</div>;
 		}
