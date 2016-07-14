@@ -26,6 +26,18 @@ $app->get('/actor/{name}', function($name)  use ($app, $client) {
 	);
 	// for each person found, construct a list of his/her movies.
 	foreach( $persons['results'] as $person ) {
+		// create URL for photo:
+		$configRepository = new \Tmdb\Repository\ConfigurationRepository($client);
+		$config = $configRepository->load();
+
+		$imageHelper = new \Tmdb\Helper\ImageHelper($config);
+
+		$image = $person['profile_path'];
+		if( ! is_null( $image ) ) {
+			$photoUrl = $imageHelper->getUrl($image);
+			$person['photo_url'] = $photoUrl;
+		}
+
 		// query movies for the person.
 		$movieCredits = $peopleApi->getMovieCredits( $person['id'] );
 
