@@ -43,13 +43,25 @@ $app->get('/actor/{name}', function($name)  use ($app, $client) {
 
 		// TODO: for each movie, get all data, then add it to the result
 		// UPDATE: to get all data from all movies, it is too slow to be usable in realtime.
-		/*
-		foreach( $movieCredits['cast'] as $movieCredit ) {
-			$movieId = $movieCredit['id'];
-			$movie = $moviesApi->getMovie( $movieId );
-			$movieCredit['movie'] = $movie;
+		
+		foreach( $movieCredits['cast'] as &$movieCredit ) {
+			$posterImg = $movieCredit['poster_path'];
+			if( ! is_null( $posterImg ) ) {
+				$posterUrl = $imageHelper->getUrl($posterImg);
+				$movieCredit['poster_url'] = $posterUrl;
+			}
 		}
-		*/
+		
+		foreach( $movieCredits['crew'] as &$movieCredit ) {
+			$posterImg = $movieCredit['poster_path'];
+			if( ! is_null( $posterImg ) ) {
+				$posterUrl = $imageHelper->getUrl($posterImg);
+				$movieCredit['poster_url'] = $posterUrl;
+			}
+		}
+		
+		// TODO: sort movies by release date
+
 		$person['movies'] = $movieCredits;
 		$result['actors'] []= $person;
 	}
