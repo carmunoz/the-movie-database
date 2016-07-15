@@ -23,9 +23,10 @@ var axios = require('axios');
 // TODO: after the initial render o state update, show a hint to the user indicating that he can
 // click over an actor to view his movies.
 
+// TODO: show an error to the user.
+
 Photo = React.createClass({
 	render: function() {
-		// TODO: use CSS instead of fixed layout
 		if( ! this.props.url  ) {
 			return <div>No photo available</div>;
 		}
@@ -39,7 +40,6 @@ Photo = React.createClass({
 
 MovieCast = React.createClass({
 	render: function() {
-		// TODO: use CSS to style this...
 		if( this.isValidForFilter() ) {
 			return <div style={{ paddingLeft: "15px", border: "1px solid black" }}>
 				<p style={{ fontWeight: "bold" }} >{ this.props.cast.original_title }</p>
@@ -75,7 +75,6 @@ MovieCast = React.createClass({
 
 CrewCast = React.createClass({
 	render: function() {
-		// TODO: use CSS to style this...
 		if( this.isValidForFilter() ) {
 			return <div style={{ paddingLeft: "15px", border: "1px solid black" }}>
 				<p style={{ fontWeight: "bold" }} >{ this.props.cast.original_title }</p>
@@ -253,7 +252,6 @@ App = React.createClass({
 		.catch(function(error){
 			console.log("error");
 			console.log(error);
-			// TODO: show an error to the user.
 		});
 	}
 });
