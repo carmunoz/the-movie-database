@@ -14,16 +14,14 @@ $app->get('/actor/{name}', function($name)  use ($app, $client) {
 
 	$searchApi = $client->getSearchApi();
 	$peopleApi = $client->getPeopleApi();
-	//$moviesApi = $client->getMoviesApi();
 
 	$persons = $searchApi->searchPersons( $name );
-
-//	error_log( print_r( $persons, true ) );
 
 	$result = array(
 		'total_results' => $persons['total_results'],
 		'actors' => array()
 	);
+
 	// for each person found, construct a list of his/her movies.
 	foreach( $persons['results'] as $person ) {
 		// create URL for photo:
@@ -60,8 +58,6 @@ $app->get('/actor/{name}', function($name)  use ($app, $client) {
 			}
 		}
 		
-		// TODO: sort movies by release date
-
 		$person['movies'] = $movieCredits;
 		$result['actors'] []= $person;
 	}
@@ -76,6 +72,8 @@ $app->get('/movie/{id}', function($id) use ($app, $client) {
 	return $app->json( $movie );
 
 } );
+
+// TODO: all other URL should return 404
 
 /*
 $app->get('/', function() use ($app) {
