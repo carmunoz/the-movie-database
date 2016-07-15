@@ -14,7 +14,7 @@ var axios = require('axios');
 // this should happen when the user search for "John" or other common name.
 // The proper way is to use or create a pagination component.
 
-// TODO: show a clock indicator when there is an Ajax call in progress.
+// TODO: show a clock indicator, a fade panel or another animation, when there is an Ajax call in progress.
 
 // TODO: apply "trim" on inputs.
 
@@ -22,6 +22,8 @@ var axios = require('axios');
 // click over an actor to view his movies.
 
 // TODO: show an error to the user when the Ajax call fails.
+
+// TODO: highlight matched words in filtered movies 
 
 Progress = React.createClass({
 
