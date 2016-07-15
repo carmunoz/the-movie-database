@@ -18,9 +18,6 @@ var axios = require('axios');
 
 // TODO: apply "trim" on inputs.
 
-// TODO: after the initial render o state update, show a hint to the user indicating that he can
-// click over an actor to view his movies.
-
 // TODO: show an error to the user when the Ajax call fails.
 
 // TODO: highlight matched words in filtered movies 
@@ -152,11 +149,14 @@ ActorList = React.createClass({
 
 	render: function() {
 		if( this.props.actors && this.props.actors.length > 0 ) {
-			return <div className="results">{
-				this.props.actors.map(function(actor) {
-					return <Actor key={""+actor.id} actor={actor}/>;
-				})
-			}</div>;
+			return <div className="results">
+				<p>Click on the actor's name or photo to see more details</p>
+				{
+					this.props.actors.map(function(actor) {
+						return <Actor key={""+actor.id} actor={actor}/>;
+					})
+				}
+			</div>;
 		}
 		else {
 			if( ! this.props.actorName || this.props.actorName == "" ) {
