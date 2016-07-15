@@ -73,41 +73,6 @@ MovieCast = React.createClass({
 
 });
 
-CrewCast = React.createClass({
-	render: function() {
-		if( this.isValidForFilter() ) {
-			return <div style={{ paddingLeft: "15px", border: "1px solid black" }}>
-				<p style={{ fontWeight: "bold" }} >{ this.props.cast.original_title }</p>
-				<Photo url={ this.props.cast.poster_url }/>
-				<p>Release date: { this.props.cast.release_date }</p>
-				<p>Job: { this.props.cast.job }</p>
-			</div>;
-		}
-		else {
-			return <div/>;
-		}
-	},
-
-	isValidForFilter: function() {
-		if( !this.props.filter || this.props.filter == '' ) {
-			return true;
-		}
-
-		if( this.props.cast.original_title && this.props.cast.original_title.toLowerCase().includes( this.props.filter.toLowerCase() ) ) {
-			return true;
-		}
-		if( this.props.cast.release_date && this.props.cast.release_date.includes( this.props.filter ) ) {
-			return true;
-		}
-		if( this.props.cast.job && this.props.cast.job.toLowerCase().includes( this.props.filter.toLowerCase() ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-});
-
 MovieList = React.createClass({
 	getInitialState: function() {
 		return {
@@ -117,18 +82,11 @@ MovieList = React.createClass({
 
 	render: function() {
 		if( this.props.movies ) {
-			if( this.props.movies.cast.length == 0 && this.props.movies.crew.length == 0 ) {
+			if( this.props.movies.cast.length == 0 ) {
 				return <div>The actor has no credit in any movies</div>;
 			}
 			else {
 				var component = this;
-				var movieCasts = this.props.movies.cast.map( function(movieCast) {
-					return <MovieCast key={movieCast.credit_id} cast={movieCast} filter={ component.state.filter }/>;
-				} );
-
-				var crewCasts = this.props.movies.crew.map( function(crewCast){
-					return <CrewCast key={crewCast.credit_id} cast={crewCast} filter={ component.state.filter }/>;
-				});
 
 				return <div>
 					<p>The actor has a role in the movie(s):</p>
@@ -141,10 +99,9 @@ MovieList = React.createClass({
 							size="60" /> 
 					</p>
 					{
-						movieCasts
-					}
-					{
-						crewCasts
+						this.props.movies.cast.map( function(movieCast) {
+							return <MovieCast key={movieCast.credit_id} cast={movieCast} filter={ component.state.filter }/>;
+						} )
 					}
 				</div>;
 			}
