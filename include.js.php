@@ -1,3 +1,3 @@
-<script type="text/javascript" src="build/app.js?v=0b0e71d7e3ebab18ac8e4e4d21c6720389f2d7f3" charset="UTF-8"></script>
+<script type="text/javascript" src="build/app.js?v=7227bb2bb50f998e07a47fce5ab617b99bad1ec6" charset="UTF-8"></script>
 
 
