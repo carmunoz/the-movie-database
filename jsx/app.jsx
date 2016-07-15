@@ -3,6 +3,7 @@ var ReactDOM = require( 'react-dom' );
 var axios = require('axios');
 
 // TODO: declare "results", "noresults" and "actorresult" in CSS
+// in general, use CSS in all components.
 
 // TODO: show a message when the total result is greater than current list (limited to 20 for performance reasons). 
 // Something like 'there are XXX more results...'
@@ -11,9 +12,12 @@ var axios = require('axios');
 
 // TODO: show a clock indicator when there is an Ajax call in progress.
 
-// TODO: add click handler for actors to show the actor's movie list
-
 // TODO: apply "trim" on inputs.
+
+// TODO: sort movie credits by release date.
+
+// TODO: after the initial render o state update, show a hint to the user indicating that he can
+// click over an actor to view his movies.
 
 Photo = React.createClass({
 	render: function() {
@@ -165,7 +169,6 @@ Actor = React.createClass({
 	},
 
 	render: function(){
-		// TODO: use CSS instead of inline style.
 		return <div className="actorresult" style={{ padding: "15px" }} onClick={ this.handleClick }>
 			<div>{this.props.actor.name}</div>
 			<Photo url={this.props.actor.photo_url}/> 
@@ -177,9 +180,6 @@ Actor = React.createClass({
 		this.setState({ movieListVisible: true });
 	}
 });
-
-// TODO: after the initial render o state update, show a hint to the user indicating that he can
-// click over an actor to view his movies.
 
 ActorList = React.createClass({
 
