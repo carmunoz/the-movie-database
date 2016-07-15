@@ -25,7 +25,7 @@ var axios = require('axios');
 Progress = React.createClass({
 
 	render: function() {
-		return <div>Please wait while loading results...</div>;
+		return <p>Please wait while loading results...</p>;
 	}
 });
 
