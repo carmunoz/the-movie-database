@@ -23,6 +23,13 @@ var axios = require('axios');
 
 // TODO: show an error to the user when the Ajax call fails.
 
+Progress = React.createClass({
+
+	render: function() {
+		return <div>Please wait while loading results...</div>;
+	}
+});
+
 Photo = React.createClass({
 	render: function() {
 		if( ! this.props.url  ) {
@@ -165,7 +172,8 @@ App = React.createClass({
 	getInitialState: function() {
 		return {
 			actors: [],
-			actorName: ''
+			actorName: '',
+			loading: false
 		}
 	},
 
@@ -177,7 +185,12 @@ App = React.createClass({
 				<input type="text" ref="actor_name" />
 				<input type="button" value="Search" onClick={this.search}/>
 			</form>
-			<ActorList actors={this.state.actors} actorName={this.state.actorName}/>
+			{
+				this.state.loading ?
+					<Progress/>
+				:
+					<ActorList actors={this.state.actors} actorName={this.state.actorName}/>
+			}
 		</div>;
 	},
 
@@ -190,12 +203,17 @@ App = React.createClass({
 			return;
 		}
 
+		// first clear de actor list and show a message of "loading..."
+
+		this.setState({ loading: true });
+
 		console.log( "searching..." + actorName );
 		var url = "api.php/actor/" + encodeURIComponent(actorName);
 		var component = this;
 
 		axios.get( url )
 		.then(function(response){
+			component.setState({ loading: false });
 			console.log("response");
 			console.log(response);
 			//var nMatches = response.data;
@@ -206,6 +224,7 @@ App = React.createClass({
 			component.setState({ actors: actors, actorName: actorName });
 		})
 		.catch(function(error){
+			component.setState({ loading: false });
 			console.log("error");
 			console.log(error);
 		});
