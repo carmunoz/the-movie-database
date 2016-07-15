@@ -64,8 +64,6 @@
 
 	// TODO: apply "trim" on inputs.
 
-	// TODO: sort movie credits by release date.
-
 	// TODO: after the initial render o state update, show a hint to the user indicating that he can
 	// click over an actor to view his movies.
 
@@ -248,6 +246,7 @@
 				console.log(response);
 				//var nMatches = response.data;
 				var actors = response.data.actors;
+				component.sortActorsAndMovies( actors );
 				console.log( actors );
 				// update state to refresh list
 				component.setState({ actors: actors, actorName: actorName });
@@ -256,6 +255,40 @@
 				console.log("error");
 				console.log(error);
 			});
+		},
+
+		sortActorsAndMovies: function( actors ) {
+			actors.sort( function(a,b) {
+				if( a.name < b.name ) {
+					return -1;
+				}
+				else if( a.name > b.name ) {
+					return 1;
+				}
+				else {
+					return 0;
+				}
+			} );
+			for( var i=0; i<actors.length; i++ ) {
+				var movies = actors[i].movies.cast;
+				movies.sort( function(a,b) {
+					if( ! a.release_date ) {
+						return 1;
+					}
+					if( ! b.release_date ) {
+						return -1;
+					}
+					if( a.release_date < b.release_date ) {
+						return -1;
+					}
+					else if( a.release_date > b.release_date ) {
+						return 1;
+					}
+					else {
+						return 0;
+					}
+				} );
+			}
 		}
 	});
 
