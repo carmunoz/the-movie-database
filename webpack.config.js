@@ -22,7 +22,6 @@ module.exports = {
 		    inject: false,
 		    sha1File: sha1File,
 		    cache: false
-//		    excludeChunks: [ 'ep_ajax' ]
 	    } ),
 	    new webpack.optimize.OccurrenceOrderPlugin()
     ]
