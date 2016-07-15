@@ -9,6 +9,4 @@ In the frontend, it uses React.js, compiled via Webpack
 ## Live demo
 
 This applicaction is accesible with the URL
-   https://.../index.php
-
-
+   https://mysterious-beach-72002.herokuapp.com/
