@@ -23,7 +23,7 @@ var axios = require('axios');
 // TODO: after the initial render o state update, show a hint to the user indicating that he can
 // click over an actor to view his movies.
 
-// TODO: show an error to the user.
+// TODO: show an error to the user when the Ajax call fails.
 
 Photo = React.createClass({
 	render: function() {
