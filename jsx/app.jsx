@@ -23,15 +23,15 @@ var axios = require('axios');
 
 // TODO: highlight matched words in filtered movies 
 
-Progress = React.createClass({
+class Progress extends React.Component {
 
-	render: function() {
+	render() {
 		return <p>Please wait while loading results...</p>;
 	}
-});
+}
 
-Photo = React.createClass({
-	render: function() {
+class Photo extends React.Component {
+	render() {
 		if( ! this.props.url  ) {
 			return <div>No photo available</div>;
 		}
@@ -41,10 +41,10 @@ Photo = React.createClass({
 			</div>;
 		}
 	}
-});
+}
 
-MovieCast = React.createClass({
-	render: function() {
+class MovieCast extends React.Component {
+	render() {
 		if( this.isValidForFilter() ) {
 			return <div style={{ paddingLeft: "15px", border: "1px solid black" }}>
 				<p style={{ fontWeight: "bold" }} >{ this.props.cast.original_title }</p>
@@ -56,9 +56,9 @@ MovieCast = React.createClass({
 		else {
 			return <div/>;
 		}
-	},
+	}
 
-	isValidForFilter: function() {
+	isValidForFilter() {
 		if( !this.props.filter || this.props.filter == '' ) {
 			return true;
 		}
@@ -76,16 +76,14 @@ MovieCast = React.createClass({
 		return false;
 	}
 
-});
+}
 
-MovieList = React.createClass({
-	getInitialState: function() {
-		return {
-			filter: ''
-		}
-	},
+class MovieList extends React.Component {
+	state = {
+		filter: ''
+	}
 
-	render: function() {
+	render() {
 		if( this.props.movies ) {
 			if( this.props.movies.cast.length == 0 ) {
 				return <div>The actor has no credit in any movies</div>;
@@ -100,7 +98,7 @@ MovieList = React.createClass({
 							type="text" 
 							ref="filter" 
 							placeholder="Enter keyword here to search in actors movie list" 
-							onChange={ this.handleChangeFilter }
+							onChange={ ::this.handleChangeFilter }
 							size="60" /> 
 					</p>
 					{
@@ -114,9 +112,9 @@ MovieList = React.createClass({
 		else {
 			return <div>There is not information about actor's movies</div>;
 		}
-	},
+	}
 
-	handleChangeFilter: function() {
+	handleChangeFilter() {
 		if( this.refs.filter.value && this.refs.filter.value != '' ) {
 			this.setState({ filter: this.refs.filter.value.trim() });
 		}
@@ -124,31 +122,29 @@ MovieList = React.createClass({
 			this.setState({ filter: '' });
 		}
 	}
-});
+}
 
-Actor = React.createClass({
-	getInitialState: function() {
-		return {
-			movieListVisible: false
-		};
-	},
+class Actor extends React.Component {
+	state = {
+		movieListVisible: false
+	}
 
-	render: function(){
-		return <div className="actorresult" style={{ padding: "15px" }} onClick={ this.handleClick }>
+	render() {
+		return <div className="actorresult" style={{ padding: "15px" }} onClick={ ::this.handleClick }>
 			<div>{this.props.actor.name}</div>
 			<Photo url={this.props.actor.photo_url}/> 
 			{ this.state.movieListVisible ? <MovieList movies={ this.props.actor.movies} /> : '' }
 		</div>;
-	},
+	}
 
-	handleClick: function() {
+	handleClick() {
 		this.setState({ movieListVisible: true });
 	}
-});
+}
 
-ActorList = React.createClass({
+class ActorList extends React.Component {
 
-	render: function() {
+	render() {
 		if( this.props.actors && this.props.actors.length > 0 ) {
 			return <div className="results">
 				<p>Click on the actor's name or photo to see more details</p>
@@ -168,25 +164,22 @@ ActorList = React.createClass({
 			}
 		}
 	}
+}
 
-});
+class App extends React.Component {
+	state = {
+		actors: [],
+		actorName: '',
+		loading: false
+	};
 
-App = React.createClass({
-	getInitialState: function() {
-		return {
-			actors: [],
-			actorName: '',
-			loading: false
-		}
-	},
-
-	render: function() {
+	render() {
 		return <div>
 			<p>This a a simple app to search actor's movies.</p>
-			<form onSubmit={this.search}>
+			<form onSubmit={::this.search}>
 				<p>Actor's name ?</p>
 				<input type="text" ref="actor_name" />
-				<input type="button" value="Search" onClick={this.search}/>
+				<input type="button" value="Search" onClick={::this.search}/>
 			</form>
 			{
 				this.state.loading ?
@@ -195,9 +188,9 @@ App = React.createClass({
 					<ActorList actors={this.state.actors} actorName={this.state.actorName}/>
 			}
 		</div>;
-	},
+	}
 
-	search: function(e) {
+	search(e) {
 		e.preventDefault();
 		var actorName = this.refs.actor_name.value;
 		if( !actorName || actorName == "" ) {
@@ -231,9 +224,9 @@ App = React.createClass({
 			console.log("error");
 			console.log(error);
 		});
-	},
+	}
 
-	sortActorsAndMovies: function( actors ) {
+	sortActorsAndMovies( actors ) {
 		actors.sort( function(a,b) {
 			if( a.name < b.name ) {
 				return -1;
@@ -266,6 +259,6 @@ App = React.createClass({
 			} );
 		}
 	}
-});
+}
 
 ReactDOM.render( <App/>, document.getElementById( 'app' ) );
