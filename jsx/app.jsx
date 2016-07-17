@@ -89,8 +89,6 @@ class MovieList extends React.Component {
 				return <div>The actor has no credit in any movies</div>;
 			}
 			else {
-				var component = this;
-
 				return <div>
 					<p>The actor has a role in the movie(s):</p>
 					<p>Filter... 
@@ -102,8 +100,8 @@ class MovieList extends React.Component {
 							size="60" /> 
 					</p>
 					{
-						this.props.movies.cast.map( function(movieCast) {
-							return <MovieCast key={movieCast.credit_id} cast={movieCast} filter={ component.state.filter }/>;
+						this.props.movies.cast.map( (movieCast) => {
+							return <MovieCast key={movieCast.credit_id} cast={movieCast} filter={ this.state.filter }/>;
 						} )
 					}
 				</div>;
@@ -156,7 +154,7 @@ class ActorList extends React.Component {
 			return <div className="results">
 				<p>Click on the actor's name or photo to see more details</p>
 				{
-					this.props.actors.map(function(actor) {
+					this.props.actors.map( (actor) => {
 						return <Actor key={""+actor.id} actor={actor}/>;
 					})
 				}
@@ -217,29 +215,28 @@ class App extends React.Component {
 
 		console.log( `searching ${actorName}...` );
 		var url = "api.php/actor/" + encodeURIComponent(actorName);
-		var component = this;
 
 		axios.get( url )
-		.then(function(response){
-			component.setState({ loading: false });
+		.then( (response) => {
+			this.setState({ loading: false });
 			console.log("response");
 			console.log(response);
 			//var nMatches = response.data;
 			var actors = response.data.actors;
-			component.sortActorsAndMovies( actors );
+			this.sortActorsAndMovies( actors );
 			console.log( actors );
 			// update state to refresh list
-			component.setState({ actors: actors, actorName: actorName });
+			this.setState({ actors: actors, actorName: actorName });
 		})
-		.catch(function(error){
-			component.setState({ loading: false });
+		.catch( (error) => {
+			this.setState({ loading: false });
 			console.log("error");
 			console.log(error);
 		});
 	}
 
 	sortActorsAndMovies( actors ) {
-		actors.sort( function(a,b) {
+		actors.sort( (a,b) => {
 			if( a.name < b.name ) {
 				return -1;
 			}
@@ -252,7 +249,7 @@ class App extends React.Component {
 		} );
 		for( var i=0; i<actors.length; i++ ) {
 			var movies = actors[i].movies.cast;
-			movies.sort( function(a,b) {
+			movies.sort( (a,b) => {
 				if( ! a.release_date ) {
 					return 1;
 				}
