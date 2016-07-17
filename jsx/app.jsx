@@ -23,6 +23,8 @@ var axios = require('axios');
 
 // TODO: highlight matched words in filtered movies 
 
+// TODO: on click over an actor, put focus on filter field.
+
 class Progress extends React.Component {
 
 	render() {
@@ -188,6 +190,11 @@ class App extends React.Component {
 					<ActorList actors={this.state.actors} actorName={this.state.actorName}/>
 			}
 		</div>;
+	}
+
+	componentDidMount() {
+		// on first render, set the focus on actor search field.
+		this.refs.actor_name.focus();
 	}
 
 	search = (e) => {
