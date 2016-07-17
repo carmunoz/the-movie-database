@@ -98,7 +98,7 @@ class MovieList extends React.Component {
 							type="text" 
 							ref="filter" 
 							placeholder="Enter keyword here to search in actors movie list" 
-							onChange={ ::this.handleChangeFilter }
+							onChange={ this.handleChangeFilter }
 							size="60" /> 
 					</p>
 					{
@@ -114,7 +114,7 @@ class MovieList extends React.Component {
 		}
 	}
 
-	handleChangeFilter() {
+	handleChangeFilter = () => {
 		if( this.refs.filter.value && this.refs.filter.value != '' ) {
 			this.setState({ filter: this.refs.filter.value.trim() });
 		}
@@ -130,14 +130,14 @@ class Actor extends React.Component {
 	}
 
 	render() {
-		return <div className="actorresult" style={{ padding: "15px" }} onClick={ ::this.handleClick }>
+		return <div className="actorresult" style={{ padding: "15px" }} onClick={ this.handleClick }>
 			<div>{this.props.actor.name}</div>
 			<Photo url={this.props.actor.photo_url}/> 
 			{ this.state.movieListVisible ? <MovieList movies={ this.props.actor.movies} /> : '' }
 		</div>;
 	}
 
-	handleClick() {
+	handleClick = () => {
 		this.setState({ movieListVisible: true });
 	}
 }
@@ -176,10 +176,10 @@ class App extends React.Component {
 	render() {
 		return <div>
 			<p>This a a simple app to search actor's movies.</p>
-			<form onSubmit={::this.search}>
+			<form onSubmit={this.search}>
 				<p>Actor's name ?</p>
 				<input type="text" ref="actor_name" />
-				<input type="button" value="Search" onClick={::this.search}/>
+				<input type="button" value="Search" onClick={this.search}/>
 			</form>
 			{
 				this.state.loading ?
@@ -190,7 +190,7 @@ class App extends React.Component {
 		</div>;
 	}
 
-	search(e) {
+	search = (e) => {
 		e.preventDefault();
 		var actorName = this.refs.actor_name.value;
 		if( !actorName || actorName == "" ) {
@@ -203,7 +203,7 @@ class App extends React.Component {
 
 		this.setState({ loading: true });
 
-		console.log( "searching..." + actorName );
+		console.log( `searching ${actorName}...` );
 		var url = "api.php/actor/" + encodeURIComponent(actorName);
 		var component = this;
 
