@@ -11,8 +11,17 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.css$/, loader: 'style-loader!css-loader' },
-            { test: /\.jsx$/, loader: 'jsx-loader?harmony&target=es3' }
+            {
+                test: /\.jsx$/,
+                exclude: /node_modules/,
+                loaders: ['babel-loader']
+            }
+        ],
+        postLoaders: [
+            {
+                test: /\.jsx$/,
+                loaders: ['es3ify-loader']
+            }
         ]
     },
     plugins: [
