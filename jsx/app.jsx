@@ -147,13 +147,13 @@ class MovieList extends React.Component {
 			return true;
 		}
 
-		if( cast.original_title && cast.original_title.toLowerCase().includes( filter.toLowerCase() ) ) {
+		if( cast.original_title && cast.original_title.toLowerCase().indexOf( filter.toLowerCase() ) != -1 ) {
 			return true;
 		}
-		if( cast.release_date && cast.release_date.includes( filter ) ) {
+		if( cast.release_date && cast.release_date.indexOf( filter ) != -1 ) {
 			return true;
 		}
-		if( cast.character && cast.character.toLowerCase().includes( filter.toLowerCase() ) ) {
+		if( cast.character && cast.character.toLowerCase().indexOf( filter.toLowerCase() ) != -1 ) {
 			return true;
 		}
 
