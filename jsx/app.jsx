@@ -56,7 +56,7 @@ class Photo extends React.Component {
 
 class MovieCast extends React.Component {
 	render() {
-		if( this.isValidForFilter() ) {
+		if( this.isValidForFilter( this.props.filter, this.props.cast ) ) {
 			return <div style={{ paddingLeft: "15px", border: "1px solid black" }}>
 				<p style={{ fontWeight: "bold" }} >{ this.props.cast.original_title }</p>
 				<Photo url={ this.props.cast.poster_url }/>
@@ -69,18 +69,18 @@ class MovieCast extends React.Component {
 		}
 	}
 
-	isValidForFilter() {
-		if( !this.props.filter || this.props.filter == '' ) {
+	isValidForFilter( filter, cast ) {
+		if( !filter || filter == '' ) {
 			return true;
 		}
 
-		if( this.props.cast.original_title && this.props.cast.original_title.toLowerCase().includes( this.props.filter.toLowerCase() ) ) {
+		if( cast.original_title && cast.original_title.toLowerCase().includes( filter.toLowerCase() ) ) {
 			return true;
 		}
-		if( this.props.cast.release_date && this.props.cast.release_date.includes( this.props.filter ) ) {
+		if( cast.release_date && cast.release_date.includes( filter ) ) {
 			return true;
 		}
-		if( this.props.cast.character && this.props.cast.character.toLowerCase().includes( this.props.filter.toLowerCase() ) ) {
+		if( cast.character && cast.character.toLowerCase().includes( filter.toLowerCase() ) ) {
 			return true;
 		}
 
