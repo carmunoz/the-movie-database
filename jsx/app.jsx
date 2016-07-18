@@ -52,41 +52,33 @@ class Photo extends React.Component {
 			</div>;
 		}
 	}
+
+	shouldComponentUpdate(newProps, newState) {
+		// this component only depends on its props. For all effects it's immutable.
+		if( this.props.url === newProps.url ) {
+			return false;
+		}
+		return true;
+	}
 }
 
 class MovieCast extends React.Component {
 	render() {
-		if( this.isValidForFilter( this.props.filter, this.props.cast ) ) {
-			return <div style={{ paddingLeft: "15px", border: "1px solid black" }}>
-				<p style={{ fontWeight: "bold" }} >{ this.props.cast.original_title }</p>
-				<Photo url={ this.props.cast.poster_url }/>
-				<p>Release date: { this.props.cast.release_date }</p>
-				<p>Character name: { this.props.cast.character }</p>
-			</div>;
-		}
-		else {
-			return <div/>;
-		}
+		return <div style={{ paddingLeft: "15px", border: "1px solid black" }}>
+			<p style={{ fontWeight: "bold" }} >{ this.props.cast.original_title }</p>
+			<Photo url={ this.props.cast.poster_url }/>
+			<p>Release date: { this.props.cast.release_date }</p>
+			<p>Character name: { this.props.cast.character }</p>
+		</div>;
 	}
 
-	isValidForFilter( filter, cast ) {
-		if( !filter || filter == '' ) {
-			return true;
+	shouldComponentUpdate(newProps, newState) {
+		// this component only depends on its props. For all effects it's immutable.
+		if( this.props.cast === newProps.cast ) {
+			return false;
 		}
-
-		if( cast.original_title && cast.original_title.toLowerCase().includes( filter.toLowerCase() ) ) {
-			return true;
-		}
-		if( cast.release_date && cast.release_date.includes( filter ) ) {
-			return true;
-		}
-		if( cast.character && cast.character.toLowerCase().includes( filter.toLowerCase() ) ) {
-			return true;
-		}
-
-		return false;
+		return true;
 	}
-
 }
 
 class MovieList extends React.Component {
@@ -114,9 +106,13 @@ class MovieList extends React.Component {
 						</FormGroup>
 					</Form>
 					{
-						this.props.movies.cast.map( (movieCast) => {
-							return <MovieCast key={movieCast.credit_id} cast={movieCast} filter={ this.state.filter }/>;
-						} )
+						this.props.movies.cast
+							.filter( (movieCast) => { 
+								return this.isValidForFilter( this.state.filter, movieCast ); 
+							} )
+							.map( (movieCast) => {
+								return <MovieCast key={movieCast.credit_id} cast={movieCast}/>;
+							} )
 					}
 				</div>;
 			}
@@ -128,9 +124,38 @@ class MovieList extends React.Component {
 
 	componentDidMount() {
 		// on first render of movie list, set focus on filter
+/*
 		if( this.refs.filter ) {
 			this.refs.filter.focus();
 		}
+*/
+	}
+
+	shouldComponentUpdate(newProps, newState) {
+		// the render only depends on the filter and the movies list.
+		if( this.state.filter == newState.filter && this.props.movies === newProps.movies ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	isValidForFilter( filter, cast ) {
+		if( !filter || filter == '' ) {
+			return true;
+		}
+
+		if( cast.original_title && cast.original_title.toLowerCase().includes( filter.toLowerCase() ) ) {
+			return true;
+		}
+		if( cast.release_date && cast.release_date.includes( filter ) ) {
+			return true;
+		}
+		if( cast.character && cast.character.toLowerCase().includes( filter.toLowerCase() ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	handleChangeFilter = (e) => {
@@ -153,6 +178,15 @@ class Actor extends React.Component {
 			<Photo url={this.props.actor.photo_url}/> 
 			{ this.state.movieListVisible ? <MovieList movies={ this.props.actor.movies} /> : '' }
 		</Panel>;
+	}
+
+	shouldComponentUpdate(newProps, newState) {
+		// the view only changes if the actor information and visibility changes
+		if( this.state.movieListVisible == newState.movieListVisible && this.props.actor === newProps.actor ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	handleClick = () => {
