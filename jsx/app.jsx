@@ -18,6 +18,8 @@ var ListGroupItem  = require( 'react-bootstrap/lib/ListGroupItem' );
 var PageHeader     = require( 'react-bootstrap/lib/PageHeader' );
 var Panel          = require( 'react-bootstrap/lib/Panel' );
 
+var ToggleDisplay = require('react-toggle-display');
+
 // TODO: declare "results", "noresults" and "actorresult" in CSS
 // in general, use CSS in all components.
 
@@ -107,11 +109,11 @@ class MovieList extends React.Component {
 					</Form>
 					{
 						this.props.movies.cast
-							.filter( (movieCast) => { 
-								return this.isValidForFilter( this.state.filter, movieCast ); 
-							} )
 							.map( (movieCast) => {
-								return <MovieCast key={movieCast.credit_id} cast={movieCast}/>;
+								var isVisible = this.isValidForFilter( this.state.filter, movieCast ); 
+								return <ToggleDisplay show={isVisible}>
+										<MovieCast key={movieCast.credit_id} cast={movieCast}/>
+									</ToggleDisplay>;
 							} )
 					}
 				</div>;
