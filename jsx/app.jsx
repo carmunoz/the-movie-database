@@ -7,6 +7,17 @@ var React = require('react');
 var ReactDOM = require( 'react-dom' );
 var axios = require('axios');
 
+// bootstrap components...
+var Button         = require( 'react-bootstrap/lib/Button' );
+var ControlLabel   = require( 'react-bootstrap/lib/ControlLabel' );
+var Form           = require( 'react-bootstrap/lib/Form' );
+var FormControl    = require( 'react-bootstrap/lib/FormControl' );
+var FormGroup      = require( 'react-bootstrap/lib/FormGroup' );
+var ListGroup      = require( 'react-bootstrap/lib/ListGroup' );
+var ListGroupItem  = require( 'react-bootstrap/lib/ListGroupItem' );
+var PageHeader     = require( 'react-bootstrap/lib/PageHeader' );
+var Panel          = require( 'react-bootstrap/lib/Panel' );
+
 // TODO: declare "results", "noresults" and "actorresult" in CSS
 // in general, use CSS in all components.
 
@@ -91,14 +102,17 @@ class MovieList extends React.Component {
 			else {
 				return <div>
 					<p>The actor has a role in the movie(s):</p>
-					<p>Filter... 
-						<input 
-							type="text" 
-							ref="filter" 
-							placeholder="Enter keyword here to search in actors movie list" 
-							onChange={ this.handleChangeFilter }
-							size="60" /> 
-					</p>
+					<Form inline>
+						<FormGroup>
+							<ControlLabel>Filter... </ControlLabel>
+							<FormControl
+								type="text" 
+								ref="filter" 
+								placeholder="Enter keyword here to search in actors movie list" 
+								onChange={ this.handleChangeFilter }
+								size="60" /> 
+						</FormGroup>
+					</Form>
 					{
 						this.props.movies.cast.map( (movieCast) => {
 							return <MovieCast key={movieCast.credit_id} cast={movieCast} filter={ this.state.filter }/>;
@@ -119,9 +133,9 @@ class MovieList extends React.Component {
 		}
 	}
 
-	handleChangeFilter = () => {
-		if( this.refs.filter.value && this.refs.filter.value != '' ) {
-			this.setState({ filter: this.refs.filter.value.trim() });
+	handleChangeFilter = (e) => {
+		if( e.target.value && e.target.value != '' ) {
+			this.setState({ filter: e.target.value });
 		}
 		else {
 			this.setState({ filter: '' });
@@ -135,11 +149,10 @@ class Actor extends React.Component {
 	}
 
 	render() {
-		return <div className="actorresult" style={{ padding: "15px" }} onClick={ this.handleClick }>
-			<div>{this.props.actor.name}</div>
+		return <Panel onClick={ this.handleClick } header={ this.props.actor.name } bsStyle="info">
 			<Photo url={this.props.actor.photo_url}/> 
 			{ this.state.movieListVisible ? <MovieList movies={ this.props.actor.movies} /> : '' }
-		</div>;
+		</Panel>;
 	}
 
 	handleClick = () => {
@@ -174,38 +187,61 @@ class ActorList extends React.Component {
 class App extends React.Component {
 	state = {
 		actors: [],
-		actorName: '',
+		entry: '',
+		keyword: '',
 		loading: false
 	};
 
 	render() {
 		return <div>
-			<p>This a a simple app to search actor's movies.</p>
-			<form onSubmit={this.search}>
-				<p>Actor's name ?</p>
-				<input type="text" ref="actor_name" />
-				<input type="button" value="Search" onClick={this.search}/>
-			</form>
+			<PageHeader>The movie database<br/><small>A simple app to search actors' movies</small></PageHeader>
+			<Form onSubmit={this.search} inline>
+				<FormGroup controlId="actor_name">
+					<ControlLabel>Actor's name ?</ControlLabel>
+					{' '}
+					<FormControl
+						type="text"
+						ref="actor_name"
+						value={this.state.entry}
+						onChange={this.handleChange} />
+					{' '}
+					<Button
+						type="submit"
+						bsStyle="primary"
+						bsSize="small"
+						onClick={this.search}
+						disabled={this.state.loading}
+						>
+						{ this.state.loading ? 'Searching...' : 'Search' }
+					</Button>
+				</FormGroup>
+			</Form>
 			{
 				this.state.loading ?
 					<Progress/>
 				:
-					<ActorList actors={this.state.actors} actorName={this.state.actorName}/>
+					<ActorList actors={this.state.actors} actorName={this.state.keyword}/>
 			}
 		</div>;
 	}
 
 	componentDidMount() {
 		// on first render, set the focus on actor search field.
+/*
 		this.refs.actor_name.focus();
+*/
+	}
+
+	handleChange = (e) => {
+		this.setState({ entry: e.target.value });
 	}
 
 	search = (e) => {
 		e.preventDefault();
-		var actorName = this.refs.actor_name.value;
+		var actorName = this.state.entry;
 		if( !actorName || actorName == "" ) {
 			// clear the form and internal state
-			this.setState({ actors: [], actorName: ''});
+			this.setState({ actors: [], entry: '', keyword: '' });
 			return;
 		}
 
@@ -226,7 +262,7 @@ class App extends React.Component {
 			this.sortActorsAndMovies( actors );
 			console.log( actors );
 			// update state to refresh list
-			this.setState({ actors: actors, actorName: actorName });
+			this.setState({ actors: actors, keyword: actorName });
 		})
 		.catch( (error) => {
 			this.setState({ loading: false });
